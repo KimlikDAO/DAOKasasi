@@ -8,10 +8,21 @@ import "interfaces/IDAOKasasi.sol";
 
 contract DAOKasasiV0 is IDAOKasasi {
     function redeem(
-        address payable,
-        uint256,
-        uint256
-    ) external {}
+        address payable redeemer,
+        uint256 amount,
+        uint256 totalSupply
+    ) external {
+        IERC20[6] memory tokens = [TRYB, USDC, USDT, USDD, MIM, FRAX];
+
+        for (uint256 i = 0; i < tokens.length; ++i) {
+            uint256 toSend = (tokens[i].balanceOf(address(this)) * amount) /
+                totalSupply;
+            if (toSend > 0) tokens[i].transfer(redeemer, toSend);
+        }
+
+        uint256 toSendNative = (address(this).balance * amount) / totalSupply;
+        if (toSendNative > 0) redeemer.transfer(toSendNative);
+    }
 
     function distroStageUpdated(DistroStage) external {}
 
