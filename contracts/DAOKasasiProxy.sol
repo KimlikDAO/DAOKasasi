@@ -4,8 +4,7 @@
 pragma solidity 0.8.15;
 
 import {ERC1967_CODE_SLOT} from "interfaces/IDAOKasasi.sol";
-
-address constant DAO_KASASI_VO = 0xAd3150f826FaA9bFB3A0Ca6a307D3E8EAd07B463;
+import {DAO_KASASI_VO} from "./Versions.sol";
 
 contract DAOKasasiProxy {
     constructor() {

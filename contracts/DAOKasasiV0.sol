@@ -3,8 +3,9 @@
 
 pragma solidity 0.8.15;
 
-import "interfaces/Addresses.sol";
 import "interfaces/IDAOKasasi.sol";
+import "interfaces/Tokens.sol";
+import {DEV_KASASI, TCKO_ADDR} from "interfaces/Addresses.sol";
 
 contract DAOKasasiV0 is IDAOKasasi {
     function redeem(
@@ -12,8 +13,9 @@ contract DAOKasasiV0 is IDAOKasasi {
         uint256 amount,
         uint256 totalSupply
     ) external {
-        IERC20[6] memory tokens = [TRYB, USDC, USDT, USDD, MIM, FRAX];
+        require(msg.sender == TCKO_ADDR);
 
+        IERC20[6] memory tokens = [TRYB, USDC, USDT, USDD, MIM, FRAX];
         for (uint256 i = 0; i < tokens.length; ++i) {
             uint256 toSend = (tokens[i].balanceOf(address(this)) * amount) /
                 totalSupply;
