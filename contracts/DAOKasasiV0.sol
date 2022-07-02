@@ -15,7 +15,7 @@ contract DAOKasasiV0 is IDAOKasasi {
     ) external {
         require(msg.sender == TCKO_ADDR);
 
-        IERC20[6] memory tokens = [TRYB, USDC, USDT, USDD, MIM, FRAX];
+        IERC20[7] memory tokens = [FRAX, MIM, TRYB, USDC, USDD, USDT, YUSD];
         for (uint256 i = 0; i < tokens.length; ++i) {
             uint256 toSend = (tokens[i].balanceOf(address(this)) * amount) /
                 totalSupply;

@@ -6,7 +6,7 @@ pragma solidity 0.8.15;
 import {ERC1967_CODE_SLOT} from "interfaces/IDAOKasasi.sol";
 import {DAO_KASASI_VO} from "./Versions.sol";
 
-contract DAOKasasiProxy {
+contract DAOKasasi {
     constructor() {
         assembly {
             sstore(ERC1967_CODE_SLOT, DAO_KASASI_VO)
