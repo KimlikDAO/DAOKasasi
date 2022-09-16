@@ -1,10 +1,10 @@
-//SPDX-License-Identifier: MIT
-//🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿
+// SPDX-License-Identifier: MIT
+// 🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿
 
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
-import {ERC1967_CODE_SLOT} from "interfaces/IDAOKasasi.sol";
 import {DAO_KASASI_VO} from "./Versions.sol";
+import {ERC1967_CODE_SLOT} from "interfaces/IDAOKasasi.sol";
 
 contract DAOKasasi {
     constructor() {

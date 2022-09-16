@@ -13,4 +13,4 @@ def contract_address(sender: str, nonce=0) -> str:
     return to_checksum_address(address_bytes)
 
 
-print(contract_address("0xD0C8568eb0E0f99786882511eD24762dCA447E06", 1))
+print(contract_address("0x396A55bFbc17a726758efa9AC5BEF67a3616917b", 0))

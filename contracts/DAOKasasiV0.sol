@@ -1,10 +1,10 @@
-//SPDX-License-Identifier: MIT
-//🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿
+// SPDX-License-Identifier: MIT
+// 🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿🧿
 
-pragma solidity 0.8.15;
+pragma solidity 0.8.16;
 
+import "interfaces/AvalancheTokens.sol";
 import "interfaces/IDAOKasasi.sol";
-import "interfaces/Tokens.sol";
 import {DEV_KASASI, TCKO_ADDR} from "interfaces/Addresses.sol";
 
 contract DAOKasasiV0 is IDAOKasasi {
@@ -15,7 +15,7 @@ contract DAOKasasiV0 is IDAOKasasi {
     ) external {
         require(msg.sender == TCKO_ADDR);
 
-        IERC20[7] memory tokens = [FRAX, MIM, TRYB, USDC, USDD, USDT, YUSD];
+        IERC20[3] memory tokens = [IERC20(USDT), USDC, TRYB];
         for (uint256 i = 0; i < tokens.length; ++i) {
             uint256 toSend = (tokens[i].balanceOf(address(this)) * amount) /
                 totalSupply;
@@ -28,16 +28,16 @@ contract DAOKasasiV0 is IDAOKasasi {
 
     function distroStageUpdated(DistroStage) external {}
 
-    function migrateToCode(address codeAddress) external {
+    function migrateToCode(IDAOKasasi newCode) external {
         require(msg.sender == DEV_KASASI);
         require(
-            // ethers.utils.keccak256(ethers.utils.toUtf8Bytes("DAOKasasiV1"))
+            // keccak256("DAOKasasiV1")
             bytes32(
                 0x3f5e44c15812e7a9bd6973fd9e7c7da4afea4649390f7a1652d5b56caa8afeff
-            ) == IDAOKasasi(codeAddress).versionHash()
+            ) == newCode.versionHash()
         );
         assembly {
-            sstore(ERC1967_CODE_SLOT, codeAddress)
+            sstore(ERC1967_CODE_SLOT, newCode)
         }
     }
 
