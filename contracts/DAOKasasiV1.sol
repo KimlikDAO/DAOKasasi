@@ -3,8 +3,11 @@
 pragma solidity 0.8.17;
 
 import "interfaces/AvalancheTokens.sol";
-import "interfaces/IDAOKasasi.sol";
+import {CODE_SLOT} from "interfaces/ERC1967.sol";
+import {DistroStage, IDAOKasasi} from "interfaces/IDAOKasasi.sol";
 import {OYLAMA, TCKO_ADDR} from "interfaces/Addresses.sol";
+
+address constant DAO_KASASI_V1 = 0x4DB9cbE44bF9B747Cd3F3fEfEFbfDb2f2DaA8Cf5;
 
 contract DAOKasasiV1 is IDAOKasasi {
     function redeem(
@@ -35,7 +38,7 @@ contract DAOKasasiV1 is IDAOKasasi {
                 0x2d7821c610b81500eb7161a82514071bd27c2ea4bcd376b4e2641a3478f8227c
         );
         assembly {
-            sstore(ERC1967_CODE_SLOT, newCode)
+            sstore(CODE_SLOT, newCode)
         }
     }
 

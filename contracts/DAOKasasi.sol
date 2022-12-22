@@ -2,13 +2,13 @@
 
 pragma solidity 0.8.17;
 
-import {DAO_KASASI_V1} from "./Versions.sol";
-import {ERC1967_CODE_SLOT} from "interfaces/IDAOKasasi.sol";
+import {CODE_SLOT} from "interfaces/ERC1967.sol";
+import {DAO_KASASI_V1} from "./DAOKasasiV1.sol";
 
 contract DAOKasasi {
     constructor() {
         assembly {
-            sstore(ERC1967_CODE_SLOT, DAO_KASASI_V1)
+            sstore(CODE_SLOT, DAO_KASASI_V1)
         }
     }
 
@@ -16,7 +16,7 @@ contract DAOKasasi {
 
     fallback() external payable {
         assembly {
-            let codeAddress := sload(ERC1967_CODE_SLOT)
+            let codeAddress := sload(CODE_SLOT)
             calldatacopy(0, 0, calldatasize())
             let result := delegatecall(
                 gas(),
