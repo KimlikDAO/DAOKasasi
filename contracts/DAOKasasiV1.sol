@@ -2,10 +2,11 @@
 
 pragma solidity 0.8.17;
 
-import "interfaces/AvalancheTokens.sol";
 import {CODE_SLOT} from "interfaces/ERC1967.sol";
 import {DistroStage, IDAOKasasi} from "interfaces/IDAOKasasi.sol";
+import {IERC20} from "interfaces/IERC20.sol";
 import {OYLAMA, TCKO_ADDR} from "interfaces/Addresses.sol";
+import {USDT, USDC, BUSD, TRYB} from "interfaces/AvalancheTokens.sol";
 
 address constant DAO_KASASI_V1 = 0x4DB9cbE44bF9B747Cd3F3fEfEFbfDb2f2DaA8Cf5;
 
@@ -24,6 +25,9 @@ contract DAOKasasiV1 is IDAOKasasi {
             if (toSend > 0) tokens[i].transfer(redeemer, toSend);
         }
 
+        // Reentrancy attack attempts actually lose money since we update user
+        // balances before the `redeem()` and reduce the total supply after the
+        // `redeem()`.
         uint256 toSendNative = (address(this).balance * amount) / totalSupply;
         if (toSendNative > 0) redeemer.transfer(toSendNative);
     }
