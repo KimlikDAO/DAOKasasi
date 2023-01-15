@@ -3,7 +3,7 @@
 pragma solidity 0.8.17;
 
 import {CODE_SLOT} from "interfaces/ERC1967.sol";
-import {DistroStage, IDAOKasasi} from "interfaces/IDAOKasasi.sol";
+import {DistroStage, IDAOKasasi, AMOUNT_OFFSET, SUPPLY_OFFSET} from "interfaces/IDAOKasasi.sol";
 import {IERC20} from "interfaces/IERC20.sol";
 import {OYLAMA, TCKO_ADDR} from "interfaces/Addresses.sol";
 import {USDT, USDC, BUSD, TRYB} from "interfaces/AvalancheTokens.sol";
@@ -11,24 +11,25 @@ import {USDT, USDC, BUSD, TRYB} from "interfaces/AvalancheTokens.sol";
 address constant DAO_KASASI_V1 = 0x4DB9cbE44bF9B747Cd3F3fEfEFbfDb2f2DaA8Cf5;
 
 contract DAOKasasiV1 is IDAOKasasi {
-    function redeem(
-        address payable redeemer,
-        uint256 amount,
-        uint256 totalSupply
-    ) external {
+    function redeem(uint256 amountSupplyRedeemer) external {
+        uint256 amount = amountSupplyRedeemer >> AMOUNT_OFFSET;
+        uint256 supply = uint48(amountSupplyRedeemer >> SUPPLY_OFFSET);
+        address payable redeemer = payable(
+            address(uint160(amountSupplyRedeemer))
+        );
         require(msg.sender == TCKO_ADDR);
 
         IERC20[4] memory tokens = [IERC20(USDT), USDC, TRYB, BUSD];
         for (uint256 i = 0; i < tokens.length; ++i) {
             uint256 toSend = (tokens[i].balanceOf(address(this)) * amount) /
-                totalSupply;
+                supply;
             if (toSend > 0) tokens[i].transfer(redeemer, toSend);
         }
 
         // Reentrancy attack attempts actually lose money since we update user
         // balances before the `redeem()` and reduce the total supply after the
         // `redeem()`.
-        uint256 toSendNative = (address(this).balance * amount) / totalSupply;
+        uint256 toSendNative = (address(this).balance * amount) / supply;
         if (toSendNative > 0) redeemer.transfer(toSendNative);
     }
 

@@ -16,11 +16,7 @@ contract Poked {
 }
 
 contract MockDAOKasasiV2 is IDAOKasasi {
-    function redeem(
-        address payable redeemer,
-        uint256 burnedTokens,
-        uint256 totalTokens
-    ) external {}
+    function redeem(uint256 amountSupplyRedeemer) external {}
 
     function distroStageUpdated(DistroStage) external {}
 
@@ -36,11 +32,7 @@ contract MockDAOKasasiV2 is IDAOKasasi {
 }
 
 contract MockBadDAOKasasiV2 is IDAOKasasi {
-    function redeem(
-        address payable redeemer,
-        uint256 burnedTokens,
-        uint256 totalTokens
-    ) external {}
+    function redeem(uint256 amountSupplyRedeemer) external {}
 
     function distroStageUpdated(DistroStage) external {}
 
@@ -91,7 +83,11 @@ contract DAOKasasiV1Test is Test {
         vm.prank(BUSD_DEPLOYER);
         BUSD.transfer(DAO_KASASI, 100e6);
         vm.prank(TCKO_ADDR);
-        daoKasasi.redeem(payable(address(this)), 1, 100);
+        daoKasasi.redeem(
+            (uint256(1) << AMOUNT_OFFSET) |
+                (uint256(100) << SUPPLY_OFFSET) |
+                uint160(address(this))
+        );
 
         assertEq(USDT.balanceOf(address(this)), 1e6);
         assertEq(USDC.balanceOf(address(this)), 1e6);
@@ -105,7 +101,11 @@ contract DAOKasasiV1Test is Test {
         vm.deal(DAO_KASASI, 5);
 
         vm.prank(TCKO_ADDR);
-        daoKasasi.redeem(payable(address(this)), 1, 5);
+        daoKasasi.redeem(
+            (uint256(1) << AMOUNT_OFFSET) |
+                (uint256(5) << SUPPLY_OFFSET) |
+                uint160(address(this))
+        );
 
         assertEq(address(this).balance, balance + 1);
     }
@@ -115,12 +115,20 @@ contract DAOKasasiV1Test is Test {
         vm.deal(DAO_KASASI, 0);
 
         vm.prank(TCKO_ADDR);
-        daoKasasi.redeem(payable(address(this)), 1, 5);
+        daoKasasi.redeem(
+            (uint256(1) << AMOUNT_OFFSET) |
+                (uint256(5) << SUPPLY_OFFSET) |
+                uint160(address(this))
+        );
 
         assertEq(address(this).balance, balance);
 
         vm.prank(TCKO_ADDR);
-        daoKasasi.redeem(payable(address(this)), 0, 5);
+        daoKasasi.redeem(
+            (uint256(1) << AMOUNT_OFFSET) |
+                (uint256(5) << SUPPLY_OFFSET) |
+                uint160(address(this))
+        );
 
         assertEq(address(this).balance, balance);
     }
@@ -145,10 +153,18 @@ contract DAOKasasiV1Test is Test {
 
     function testAuthentication() public {
         vm.expectRevert();
-        daoKasasi.redeem(payable(address(this)), 1, 100);
+        daoKasasi.redeem(
+            (uint256(1) << AMOUNT_OFFSET) |
+                (uint256(100) << SUPPLY_OFFSET) |
+                uint160(address(this))
+        );
 
         vm.prank(TCKO_ADDR);
-        daoKasasi.redeem(payable(address(this)), 1, 100);
+        daoKasasi.redeem(
+            (uint256(1) << AMOUNT_OFFSET) |
+                (uint256(100) << SUPPLY_OFFSET) |
+                uint160(address(this))
+        );
 
         vm.expectRevert();
         daoKasasi.migrateToCode(IDAOKasasi(vm.addr(1337)));
