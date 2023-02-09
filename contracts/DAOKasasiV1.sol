@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {CODE_SLOT} from "interfaces/ERC1967.sol";
 import {DistroStage, IDAOKasasi, AMOUNT_OFFSET, SUPPLY_OFFSET} from "interfaces/IDAOKasasi.sol";

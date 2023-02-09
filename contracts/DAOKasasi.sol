@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {CODE_SLOT} from "interfaces/ERC1967.sol";
 import {DAO_KASASI_V1} from "./DAOKasasiV1.sol";
@@ -12,6 +12,10 @@ contract DAOKasasi {
         }
     }
 
+    /**
+     * DAOKasası does not reach to native token receipt so that ERC-20 assets and
+     * the native token behaves the same way.
+     */
     receive() external payable {}
 
     fallback() external payable {
